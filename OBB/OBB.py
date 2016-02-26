@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import time
-from maya import cmds
-from maya import OpenMaya
+
+try:
+    from maya import cmds
+    from maya import OpenMaya
+except:
+    pass
+
 from scipy import array
 from scipy.linalg import eigh
 from scipy.spatial import ConvexHull
