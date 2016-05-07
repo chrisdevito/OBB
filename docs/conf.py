@@ -7,7 +7,7 @@ import sphinx_rtd_theme
 
 # Get the project root dir, which is the parent dir of this
 cwd = os.getcwd()
-project_root = os.path.dirname(cwd)
+project_root = os.path.dirname(os.path.dirname(cwd))
 
 # Insert the project root dir as the first element in the PYTHONPATH.
 # This lets us ensure that the source package is imported, and that its
@@ -71,7 +71,7 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # here, relative to this directory. They are copied after the builtin
 # static files, so a file named "default.css" will overwrite the builtin
 # "default.css".
-html_static_path = ['_static']
+html_static_path = []
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'OBBdoc'

@@ -1,18 +1,21 @@
-Welcome to OBB's documentation!
+Oriented Bounding Boxes in Maya (OBB)
 ======================================
 
-Contents:
+Features
+=========
+
+Planned Features
+================
+
+Requirements
+=============
+Python 2.6 or greater.
+
+Table of Contents
+=================
 
 .. toctree::
    :maxdepth: 2
 
    readme
    usage
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
