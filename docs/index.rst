@@ -4,6 +4,8 @@ Oriented Bounding Boxes in Maya (OBB)
 ======================================
 A simple python class that is based off code from `here <http://jamesgregson.blogspot.com/2011/03/latex-test.html>`_.
 
+.. image:: docs/images/OBB_from_points.jpg
+
 Features
 =========
 - 3 Different solve methods (from points, triangles, and hull).
