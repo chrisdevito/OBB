@@ -4,6 +4,8 @@
 Usage
 =====
 
+Here's a simple api usage example with the 3 methods.
+
 .. code-block:: python
     :name: helloWorld.py
 

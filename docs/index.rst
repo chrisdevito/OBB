@@ -8,7 +8,7 @@ A simple python class that is based off code from `here <http://jamesgregson.blo
 
 Features
 =========
-- 3 Different solve methods (from points, triangles, and hull).
+- 3 different solve methods (from points, triangles, and hull).
 - Has a matrix attribute that can be applied to any transform in Maya (deformers, meshes, etc...).
 
 Planned Features
