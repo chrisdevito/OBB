@@ -10,6 +10,6 @@ Features
 
 * TODO
 
-Documenation
-=============
+Documentation
+--------------
 You can find more documentation `here <https://obb.readthedocs.org>`_
