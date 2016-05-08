@@ -1,3 +1,5 @@
+.. _index:
+
 Oriented Bounding Boxes in Maya (OBB)
 ======================================
 
@@ -15,7 +17,8 @@ Table of Contents
 =================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    readme
    usage
+   app
