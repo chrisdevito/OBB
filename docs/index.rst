@@ -16,9 +16,9 @@ Planned Features
 
 Requirements
 =============
-Autodesk Maya 2015 (http://www.autodesk.com/products/maya/overview)
-Scipy 0.16.0 (https://www.scipy.org/)
-Numpy 1.9.2 (http://www.numpy.org/)
+- Autodesk Maya 2015 (http://www.autodesk.com/products/maya/overview)
+- Scipy 0.16.0 (https://www.scipy.org/)
+- Numpy 1.9.2 (http://www.numpy.org/)
 
 Table of Contents
 =================
