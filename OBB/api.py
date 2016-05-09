@@ -9,20 +9,12 @@ except:
     pass
 
 try:
-    # Windows only import so it will fail if not.
-    from .packages import numpy
-    from .packages import scipy
+    import scipy
     from scipy.linalg import eigh
     from scipy.spatial import ConvexHull
 except:
-    # Try to grab it from site-packages
-    try:
-        import scipy
-        from scipy.linalg import eigh
-        from scipy.spatial import ConvexHull
-    except:
-        RuntimeError("Unable to load scipy. Please install it!")
-        raise
+    RuntimeError("Unable to load scipy. Please install it!")
+    raise
 
 
 def timeit(method):
