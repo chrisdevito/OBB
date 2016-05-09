@@ -10,6 +10,7 @@ except:
 
 try:
     # Windows only import so it will fail if not.
+    from .packages import numpy
     from .packages import scipy
     from scipy.linalg import eigh
     from scipy.spatial import ConvexHull
