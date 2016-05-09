@@ -16,9 +16,22 @@ Pip or Git
 ------------
 You can get OBB by git or by using pip.
 
+If not on Windows
+------------------
 ::
+    $ pip install numpy
+    $ pip install scipy
     $ pip install OBB_Maya
 
+On Windows
+-----------
+::
+    $ pip install -i https://pypi.anaconda.org/carlkl/simple numpy
+    $ pip install -i https://pypi.anaconda.org/carlkl/simple scipy
+    $ pip install OBB_Maya
+
+Git
+----
 ::
     $ git clone https://github.com/chrisdevito/OBB
     $ cd OBB
