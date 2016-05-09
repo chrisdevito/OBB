@@ -10,7 +10,8 @@ except ImportError:
 
 if sys.argv[-1] == 'pypi':
     os.system('python setup.py sdist bdist_wheel upload')
-    sys.exit()
+    sys.exit()    
+
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
