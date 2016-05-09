@@ -1,1 +1,69 @@
 // Installs the OBB package to your open maya session.
+
+proc string getPathFromProc(string $procName)
+{
+	string $whatIs = `whatIs $procName`;
+	string $parts[] = `stringToStringArray $whatIs ":"`;
+	// in case something went wrong:
+	if (size($parts) == 1)
+		return $parts[0];
+
+	// else if there are 2 items the second is the path:
+	string $path = $parts[1];
+	// or more than 2 the ":" separated them: reattach
+	if (size($parts) > 2)
+		for ($i = 2; $i < size($parts); $i++)
+			$path += ":" + $parts[$i];
+
+	return strip($path);
+}
+
+global proc setupOBB()
+{
+	string $path = `getPathFromProc "setupOBB"`;
+	string $dirPath = dirname($path);
+
+	string $userScriptDir = `internalVar -userScriptDir`;
+
+	if (`file -q -ex ($userScriptDir + "/OBB")`)
+	{
+		string $response = `confirmDialog -t "Reinstall?" -m "Would you like to reinstall OBB?" -button "Yes" -button "No" -dismissString "No"`;
+		if ($response == "Yes")
+		{
+			python "import shutil";
+			python ("shutil.rmtree(\"" + $userScriptDir + "/OBB\")");
+		}
+		else
+		{
+			return;
+		}
+	}
+
+	// Copy the file path.
+	python "import shutil";
+	python ("shutil.copytree(\"" + $dirPath + "/OBB\", \"" + $userScriptDir + "/OBB\")");
+
+	// Create a shelf.
+	global string $gShelfTopLevel;
+	string $currentShelf = `tabLayout -q -st $gShelfTopLevel`;
+
+	if (`shelfButton -q -exists "OBB_fromPoints"`)
+	{
+		deleteUI -control "OBB_fromPoints";
+		shelfTabRefresh;
+	}
+
+	shelfButton
+		-parent $currentShelf
+		-command ("from maya import cmds\nfrom OBB.api import OBB\nif __name__ == '__main__':\n\n\tmesh = cmds.ls(selection=True)\n\n\tif len(mesh) == 0:\n\t\traise RuntimeError(\"Nothing selected!\")\n\n\tobbBoundBoxPnts = OBB.from_points(mesh)\n\tobbCube = cmds.polyCube(constructionHistory=False, name=\"pointMethod_GEO\")[0]\n\tcmds.xform(obbCube, matrix=obbBoundBoxPnts.matrix)")
+		-sourceType "python"
+		-image1 "cone.png"
+		-ann "Create a oriented bounding box from points."
+		-label "OBB_Points"
+		-imageOverlayLabel "PNTS"
+		-flat true
+		"OBB_fromPoints";
+
+}
+
+setupOBB();
