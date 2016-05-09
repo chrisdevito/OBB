@@ -11,12 +11,7 @@ Using the mel script
 - After extraction, drag and drop the setup.mel script into any open maya window.
 - This will install it into your maya/scripts directory and add a shelf button to your current shelf.
 
-
-Pip or Git
-------------
-You can get OBB by git or by using pip.
-
-If not on Windows
+Pip not on Windows
 ------------------
 ::
 
@@ -24,7 +19,7 @@ If not on Windows
     $ pip install scipy
     $ pip install OBB_Maya
 
-On Windows
+Pip on Windows
 -----------
 ::
 
