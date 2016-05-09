@@ -1,5 +1,3 @@
-.. _index:
-
 Oriented Bounding Boxes in Maya (OBB)
 ======================================
 A simple python class that is based off code from `here <http://jamesgregson.blogspot.com/2011/03/latex-test.html>`_.
@@ -28,5 +26,13 @@ Table of Contents
 .. toctree::
    :maxdepth: 2
 
+   installation
    usage
    api
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

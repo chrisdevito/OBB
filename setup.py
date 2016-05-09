@@ -18,14 +18,6 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [
-    # TODO: put package requirements here
-]
-
-test_requirements = [
-    # TODO: put package test requirements here
-]
-
 setup(
     name='OBB_Maya',
     version='0.1.0',
@@ -40,8 +32,7 @@ setup(
     package_dir={'OBB':
                  'OBB'},
     include_package_data=True,
-    install_requires=requirements,
-    license="ISCL",
+    license="MIT",
     zip_safe=False,
     keywords='OBB',
     classifiers=[
@@ -51,6 +42,4 @@ setup(
         'Natural Language :: English',
         'Programming Language :: Python :: 2.7',
     ],
-    test_suite='tests',
-    tests_require=test_requirements
 )
