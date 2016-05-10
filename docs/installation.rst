@@ -35,6 +35,9 @@ Git not on Windows
 
 Git on Windows
 ---------------
+Don't use the python setup.py on windows unless you've already installed your proper numpy/scipy builds.
+It will install an incorrect version of numpy/scipy and cause your errors.
+
 ::
 
     $ git clone https://github.com/chrisdevito/OBB
