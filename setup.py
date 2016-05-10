@@ -27,7 +27,7 @@ with open('HISTORY.rst') as history_file:
 
 setup(
     name='OBB_Maya',
-    version='0.1.9',
+    version='0.1.10',
     description="Oriented Bounding Boxes in Maya.",
     long_description=readme,
     install_requires=required_packages,
