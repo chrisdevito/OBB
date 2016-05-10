@@ -18,8 +18,6 @@ if platform.system() == "Windows":
 else:
     dependencies = []
 
-print dependencies
-
 with open('README.rst') as readme_file:
     readme = readme_file.read()
 
@@ -29,7 +27,7 @@ with open('HISTORY.rst') as history_file:
 
 setup(
     name='OBB_Maya',
-    version='0.1.4',
+    version='0.1.7',
     description="Oriented Bounding Boxes in Maya.",
     long_description=readme,
     install_requires=required_packages,

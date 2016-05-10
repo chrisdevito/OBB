@@ -1,4 +1,2 @@
-https://pypi.anaconda.org/carlkl/simple/numpy
-https://pypi.anaconda.org/carlkl/simple/scipy
-# scipy==0.16.0
-# numpy==1.9.2
+scipy==0.16.0
+numpy==1.9.2
