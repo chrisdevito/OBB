@@ -20,6 +20,7 @@ Pip not on Windows
 Pip on Windows
 ---------------
 ::
+
 	// We need to install these versions of numpy/scipy for it work against Maya in Windows!
     $ pip install -i https://pypi.anaconda.org/carlkl/simple numpy
     $ pip install -i https://pypi.anaconda.org/carlkl/simple scipy
