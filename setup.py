@@ -12,8 +12,8 @@ if sys.argv[-1] == 'pypi':
 required_packages = ["numpy==1.9.2", "scipy==0.16.0"]
 
 if platform.system() == "Windows":
-    dependencies = ["http://www.chribis.com/wheels/numpy-1.9.2.whl",
-                    "http://www.chribis.com/wheels/scipy-0.16.0.whl"]
+    dependencies = ["https://pypi.anaconda.org/carlkl/simple numpy",
+                    "https://pypi.anaconda.org/carlkl/scipy numpy"]
 
 else:
     dependencies = []
@@ -27,7 +27,7 @@ with open('HISTORY.rst') as history_file:
 
 setup(
     name='OBB_Maya',
-    version='0.1.7',
+    version='0.1.9',
     description="Oriented Bounding Boxes in Maya.",
     long_description=readme,
     install_requires=required_packages,
