@@ -7,6 +7,7 @@ Get OBB
 
 Using the mel script
 ---------------------
+- Note: this only installs the numpy/scipy packages for Windows. It does not do so for OSX/Linux (use pip!).
 - Download the package from the github repo http://github.com/chrisdevito/OBB.git and click Download Zip.
 - After extraction, drag and drop the setup.mel script into any open maya window.
 - This will install it into your maya/scripts directory and add a shelf button to your current shelf.
