@@ -12,8 +12,8 @@ if sys.argv[-1] == 'pypi':
 required_packages = ["numpy==1.9.2", "scipy==0.16.0"]
 
 if platform.system() == "Windows":
-    dependencies = ["https://pypi.anaconda.org/carlkl/simple/numpy",
-                    "https://pypi.anaconda.org/carlkl/simple/scipy"]
+    dependencies = ["http://www.chribis.com/wheels/numpy-1.9.2.whl",
+                    "http://www.chribis.com/wheels/scipy-0.16.0.whl"]
 
 else:
     dependencies = []
