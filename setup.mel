@@ -63,9 +63,15 @@ global proc setupOBB()
 	global string $gShelfTopLevel;
 	string $currentShelf = `tabLayout -q -st $gShelfTopLevel`;
 
-	if (`shelfButton -q -exists "OBB_fromPoints"`)
+	if (`shelfButton -q -exists "OBB_CubefromPoints"`)
 	{
-		deleteUI -control "OBB_fromPoints";
+		deleteUI -control "OBB_CubefromPoints";
+		shelfTabRefresh;
+	}
+
+	if (`shelfButton -q -exists "OBB_LatticefromPoints"`)
+	{
+		deleteUI -control "OBB_CubefromPoints";
 		shelfTabRefresh;
 	}
 
@@ -75,10 +81,21 @@ global proc setupOBB()
 		-sourceType "python"
 		-image1 "cone.png"
 		-ann "Create a oriented bounding box from points."
-		-label "OBB_Points"
-		-imageOverlayLabel "PNTS"
+		-label "OBB_CubefromPoints"
+		-imageOverlayLabel "CUBE"
 		-flat true
-		"OBB_fromPoints";
+		"OBB_CubefromPoints";
+
+	shelfButton
+		-parent $currentShelf
+		-command ("from maya import cmds\nfrom OBB.api import OBB\nif __name__ == '__main__':\n\n\tmesh = cmds.ls(selection=True)\n\n\tif len(mesh) == 0:\n\t\traise RuntimeError(\"Nothing selected!\")\n\n\tobbBoundBoxPnts = OBB.from_points(mesh)\n\tlattice = cmds.lattice(dv=(2, 2, 2), objectCentered=True, name=\"pointMethod_LATTICE\t\")\n\tcmds.xform(lattice[1], matrix=obbBoundBoxPnts.matrix)\n\tcmds.xform(lattice[2], matrix=obbBoundBoxPnts.matrix)")
+		-sourceType "python"
+		-image1 "cone.png"
+		-ann "Create a oriented bounding box from points."
+		-label "OBB_LatticefromPoints"
+		-imageOverlayLabel "LATTICE"
+		-flat true
+		"OBB_LatticefromPoints";
 
 	confirmDialog -t "Installed" -m "OBB has been installed!" -button "Okay";
 
