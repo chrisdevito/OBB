@@ -2,16 +2,21 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+import platform
+from setuptools import setup, find_packages
 
 if sys.argv[-1] == 'pypi':
     os.system('python setup.py sdist bdist_wheel upload')
     sys.exit()
 
+required_packages = ["numpy==1.9.2", "scipy==0.16.0"]
+
+if platform.system() == "Windows":
+    dependencies = ["https://pypi.anaconda.org/carlkl/simple/numpy/",
+                    "https://pypi.anaconda.org/carlkl/simple/scipy/"]
+
+else:
+    dependencies = []
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -19,21 +24,23 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
+
 setup(
     name='OBB_Maya',
-    version='0.1.2',
+    version='0.1.4',
     description="Oriented Bounding Boxes in Maya.",
     long_description=readme,
+    install_requires=required_packages,
     author="Christopher DeVito",
     author_email='chrisdevito@chribis.com',
     url='https://github.com/chrisdevito/OBB',
-    packages=[
-        'OBB',
-    ],
-    package_dir={'OBB':
-                 'OBB'},
-    include_package_data=True,
     license="MIT",
+    packages=find_packages(exclude=['tests']),
+    package_data={
+        '': ['LICENSE', 'README.rst', 'HISTORY.rst'],
+    },
+    dependency_links=dependencies,
+    include_package_data=True,
     zip_safe=False,
     keywords='OBB',
     classifiers=[
