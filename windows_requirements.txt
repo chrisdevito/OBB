@@ -1,2 +1,0 @@
--i https://pypi.anaconda.org/carlkl/simple numpy
--i https://pypi.anaconda.org/carlkl/simple scipy
