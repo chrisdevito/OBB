@@ -11,7 +11,7 @@ Features
 
 Planned Features
 ================
-- Remove need of scipy/numpy. So difficult to distribute nicely.
+- Snap object to object.
 - Translate, rotate, and scale attributes.
 - Increase speed by making it a C++ plugin. 
 

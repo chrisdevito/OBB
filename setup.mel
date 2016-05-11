@@ -43,22 +43,6 @@ global proc setupOBB()
 	python "import shutil";
 	python ("shutil.copytree(\"" + $dirPath + "/OBB\", \"" + $userScriptDir + "/OBB\")");
 
-	if (`about -windows`)
-	{
-		if (!`file -q -ex ($userScriptDir + "/scipy")`)
-		{
-			python ("shutil.copytree(\"" + $dirPath + "/packages/scipy\", \"" + $userScriptDir + "/scipy\")");
-		}
-		if (!`file -q -ex ($userScriptDir + "/numpy")`)
-		{
-			python ("shutil.copytree(\"" + $dirPath + "/packages/numpy\", \"" + $userScriptDir + "/numpy\")");
-		}
-	}
-	else
-	{
-		warning "PLEASE NOTE: You need to install scipy and numpy if you haven't already. Check the OBB docs to learn how!";
-	}
-
 	// Create a shelf.
 	global string $gShelfTopLevel;
 	string $currentShelf = `tabLayout -q -st $gShelfTopLevel`;

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import time
-
+from .utils import eigh
 try:
     from maya import cmds
     from maya import OpenMaya
@@ -9,12 +9,12 @@ except:
     pass
 
 try:
-    import scipy
-    from scipy.linalg import eigh
     from scipy.spatial import ConvexHull
+    hullMethod = True
 except:
-    RuntimeError("Unable to load scipy. Please install it!")
-    raise
+    RuntimeWarning("Unable to load scipy."
+                   "The from_hull method will not be available.")
+    hullMethod = False
 
 
 def timeit(method):
@@ -166,6 +166,10 @@ class OBB(object):
         Returns:
             (OBB Instance)
         """
+        if not hullMethod:
+            raise RuntimeError(
+                "From hull method unavailable because scipy cannot be imported."
+                "Please install it if you need it.")
         return cls(meshName=meshName, method=2)
 
     def create_bounding_box(self, meshName="bounding_GEO"):
@@ -283,11 +287,16 @@ class OBB(object):
             CenterPoint(OpenMaya.MVector)
             BoundingExtents(OpenMaya.MVector)
         """
-        npPointList = scipy.array(
-            [[self.points[i].x, self.points[i].y, self.points[i].z]
-             for i in xrange(self.points.length())])
+        npPointList = [[self.points[i].x, self.points[i].y, self.points[i].z]
+                       for i in xrange(self.points.length())]
 
-        hull = ConvexHull(npPointList)
+        try:
+            hull = ConvexHull(npPointList)
+        except NameError:
+            raise RuntimeError(
+                "From hull method unavailable because"
+                " scipy cannot be imported."
+                "Please install it if you need it.")
 
         indices = hull.simplices
         vertices = npPointList[indices]
@@ -430,11 +439,8 @@ class OBB(object):
         Returns:
             None
         """
-        # Covariance Matrix
-        C = scipy.array(cvMatrix)
-
         # Calculate the natural axes by getting the eigen vectors.
-        eigenValues, eigVec = eigh(C)
+        eigenValues, eigVec = eigh(cvMatrix)
 
         r = OpenMaya.MVector(eigVec[0][0], eigVec[1][0], eigVec[2][0])
         r.normalize()
