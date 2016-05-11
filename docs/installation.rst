@@ -10,7 +10,7 @@ Install numpy/scipy (**Optional**)
 You do not have to install numpy/scipy to get this to work.
 It currently just doesn't allow you to use the from_hull method in the api.
 
-Using Pip(Recommended)
+Using Pip (Recommended)
 -----------------------
 Windows (Maya requires libraries compiled against MSVC2010:
 ::
