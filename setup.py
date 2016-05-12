@@ -17,7 +17,7 @@ with open('HISTORY.rst') as history_file:
 
 setup(
     name='OBB_Maya',
-    version='0.1.12',
+    version='0.1.13',
     description="Oriented Bounding Boxes in Maya.",
     long_description=readme,
     author="Christopher DeVito",
