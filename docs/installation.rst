@@ -31,6 +31,7 @@ Installing the shelf
 After installation through whatever means, just type in the python script editor:
 
 ::
+
 	import OBB.shelf
 
 
