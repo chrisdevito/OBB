@@ -93,4 +93,10 @@ def create_shelf():
 
         cmds.shelfButton(label=button, parent=shelf, **kwargs)
 
+    # Fix object 0 error.
+    shelves = cmds.shelfTabLayout(tab_layout, query=True, tabLabelIndex=True)
+
+    for index, shelf in enumerate(shelves):
+        cmds.optionVar(stringValue=("shelfName%d" % (index+1), str(shelf)))
+
 create_shelf()
