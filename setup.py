@@ -34,7 +34,7 @@ setup(
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: ISC License (ISCL)',
+        "License :: OSI Approved :: MIT License",
         'Natural Language :: English',
         'Programming Language :: Python :: 2.7',
     ],
