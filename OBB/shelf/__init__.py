@@ -1,7 +1,12 @@
 import os
 from maya import mel
 from maya import cmds
-from PySide import QtGui
+
+try:
+    from PySide import QtGui
+except ImportError:
+    from PySide2 import QtGui
+
 from functools import partial
 from collections import OrderedDict
 
