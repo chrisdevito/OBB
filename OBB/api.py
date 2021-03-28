@@ -1,38 +1,19 @@
 # -*- coding: utf-8 -*-
 
-import time
-from .utils import eigh
+from OBB.utils import eigh
 try:
     from maya import cmds
     from maya import OpenMaya
-except:
+except ImportError:
     pass
 
 try:
     from scipy.spatial import ConvexHull
     hullMethod = True
-except:
+except ImportError:
     RuntimeWarning("Unable to load scipy."
                    "The from_hull method will not be available.")
     hullMethod = False
-
-
-def timeit(method):
-    """
-    Decorator to time function evaluation.
-    Prints "method (args, kwargs) time.sec"
-    """
-    def timed(*args, **kwargs):
-
-        ts = time.time()
-        result = method(*args, **kwargs)
-        te = time.time()
-
-        print '%r (%r, %r) %2.2f sec' % \
-              (method.__name__, args, kwargs, te-ts)
-        return result
-
-    return timed
 
 
 class OBB(object):
@@ -168,7 +149,8 @@ class OBB(object):
         """
         if not hullMethod:
             raise RuntimeError(
-                "From hull method unavailable because scipy cannot be imported."
+                "From hull method unavailable because "
+                "scipy cannot be imported."
                 "Please install it if you need it.")
         return cls(meshName=meshName, method=2)
 
@@ -288,7 +270,7 @@ class OBB(object):
             BoundingExtents(OpenMaya.MVector)
         """
         npPointList = [[self.points[i].x, self.points[i].y, self.points[i].z]
-                       for i in xrange(self.points.length())]
+                       for i in range(self.points.length())]
 
         try:
             hull = ConvexHull(npPointList)
@@ -304,13 +286,15 @@ class OBB(object):
         hullTriPoints = list(indices.flatten())
 
         hullArray = OpenMaya.MVectorArray()
-        for ind in xrange(0, len(hullPoints), 3):
+        for ind in range(0, len(hullPoints), 3):
             hullArray.append(
                 OpenMaya.MVector(
-                    hullPoints[ind], hullPoints[ind+1], hullPoints[ind+2]))
+                    hullPoints[ind],
+                    hullPoints[ind + 1],
+                    hullPoints[ind + 2]))
 
         triPoints = OpenMaya.MIntArray()
-        for tri in xrange(len(hullTriPoints)):
+        for tri in range(len(hullTriPoints)):
             triPoints.append(tri)
 
         return self.build_from_triangles(points=hullArray, triangles=triPoints)
@@ -342,14 +326,14 @@ class OBB(object):
         Am, Ai = 0.0, 0.0
         cxx, cxy, cxz, cyy, cyz, czz = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
 
-        for tInd in xrange(0, triangles.length(), 3):
+        for tInd in range(0, triangles.length(), 3):
 
             p = points[triangles[tInd]]
-            q = points[triangles[tInd+1]]
-            r = points[triangles[tInd+2]]
+            q = points[triangles[tInd + 1]]
+            r = points[triangles[tInd + 2]]
 
             mui = (p + q + r) / 3.0
-            Ai = ((q-p) ^ (r-p)).length() * 0.5
+            Ai = ((q - p) ^ (r - p)).length() * 0.5
 
             mu += mui * Ai
             Am += Ai
@@ -406,11 +390,11 @@ class OBB(object):
 
         mu = OpenMaya.MVector(0.0, 0.0, 0.0)
         # Calculate the average position of points.
-        for p in xrange(int(pointSize)):
+        for p in range(int(pointSize)):
             mu += self.points[p] / pointSize
 
         cxx, cxy, cxz, cyy, cyz, czz = 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
-        for p in xrange(int(pointSize)):
+        for p in range(int(pointSize)):
             p = self.points[p]
             cxx += p.x * p.x - mu.x * mu.x
             cxy += p.x * p.y - mu.x * mu.y
@@ -454,7 +438,7 @@ class OBB(object):
         minim = OpenMaya.MVector(1e10, 1e10, 1e10)
         maxim = OpenMaya.MVector(-1e10, -1e10, -1e10)
 
-        for i in xrange(self.points.length()):
+        for i in range(self.points.length()):
             pnt = self.points[i]
 
             p_prime = OpenMaya.MVector(
@@ -517,7 +501,7 @@ class OBB(object):
 
         mVecPoints = OpenMaya.MVectorArray()
         [mVecPoints.append(OpenMaya.MVector(mPoints[x]))
-         for x in xrange(mPoints.length())]
+         for x in range(mPoints.length())]
 
         return mVecPoints
 
@@ -540,12 +524,12 @@ class OBB(object):
 
         try:
             fnMesh = OpenMaya.MFnMesh(mDagMesh)
-        except:
+        except Exception:
             raise RuntimeError("%s is not a mesh.")
 
         return fnMesh
 
-    def getShape(self,  node):
+    def getShape(self, node):
         """
         Gets the shape node from the input node.
 
@@ -566,6 +550,7 @@ class OBB(object):
 
         elif cmds.nodeType(node) == "mesh":
             return node
+
 
 if __name__ == '__main__':
 

@@ -2,10 +2,7 @@ import os
 from maya import mel
 from maya import cmds
 
-try:
-    from PySide import QtGui
-except ImportError:
-    from PySide2 import QtGui
+from OBB.packages.Qt import QtGui
 
 from functools import partial
 from collections import OrderedDict
@@ -18,12 +15,14 @@ buttons = OrderedDict({
         'command': (
             "from maya import cmds\n"
             "from OBB.api import OBB\n"
-            "mesh = cmds.ls(selection=True)\n"
-            "if len(mesh) == 0:\n"
+            "meshes = cmds.ls(selection=True)\n"
+            "if len(meshes) == 0:\n"
             "   raise RuntimeError(\"Nothing selected!\")\n"
-            "obbBoundBoxPnts = OBB.from_points(mesh)\n"
-            "obbCube = cmds.polyCube(ch=False, name=\"pointMethod_GEO\")[0]\n"
-            "cmds.xform(obbCube, matrix=obbBoundBoxPnts.matrix)"
+            "for mesh in meshes:\n"
+            "   obbBoundBoxPnts = OBB.from_points(mesh)\n"
+            "   obbCube = cmds.polyCube(ch=False,\n"
+            "                           name=\"{}_BBOX\".format(mesh))[0]\n"
+            "   cmds.xform(obbCube, matrix=obbBoundBoxPnts.matrix)"
         ),
         'sourceType': 'python',
         'style': 'iconOnly',
@@ -37,20 +36,21 @@ buttons = OrderedDict({
         'command': (
             "from maya import cmds\n"
             "from OBB.api import OBB\n"
-            "mesh = cmds.ls(selection=True)\n"
-            "if len(mesh) == 0:\n"
+            "meshes = cmds.ls(selection=True)\n"
+            "if len(meshes) == 0:\n"
             "   raise RuntimeError(\"Nothing selected!\")\n"
-            "obbBoundBoxPnts = OBB.from_points(mesh)\n"
-            "lattice = cmds.lattice(dv=(2, 2, 2),\n"
-            "                       objectCentered=True,\n"
-            "                       name=\"pointMethod_LATTICE\t\")\n"
-            "cmds.xform(lattice[1], matrix=obbBoundBoxPnts.matrix)\n"
-            "cmds.xform(lattice[2], matrix=obbBoundBoxPnts.matrix)"
+            "for mesh in meshes:\n"
+            "   obbBoundBoxPnts = OBB.from_points(mesh)\n"
+            "   lattice = cmds.lattice(dv=(2, 2, 2),\n"
+            "                          objectCentered=True,\n"
+            "                          name=\"{}_LATTICEBOX\".format(mesh))\n"
+            "   cmds.xform(lattice[1], matrix=obbBoundBoxPnts.matrix)\n"
+            "   cmds.xform(lattice[2], matrix=obbBoundBoxPnts.matrix)"
         ),
         'sourceType': 'python',
         'style': 'iconOnly',
         'image': shelf_path('OBB_lattice.png'),
-        'annotation': 'AOV Matte management',
+        'annotation': 'Oriented Bounding Box',
         'enableCommandRepeat': False,
         'flat': True,
         'enableBackground': False,
@@ -102,6 +102,7 @@ def create_shelf():
     shelves = cmds.shelfTabLayout(tab_layout, query=True, tabLabelIndex=True)
 
     for index, shelf in enumerate(shelves):
-        cmds.optionVar(stringValue=("shelfName%d" % (index+1), str(shelf)))
+        cmds.optionVar(stringValue=("shelfName%d" % (index + 1), str(shelf)))
+
 
 create_shelf()
