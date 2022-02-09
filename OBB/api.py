@@ -24,7 +24,7 @@ class OBB(object):
     """
     meshName = None
 
-    def __init__(self, meshName=None, method=0, selected_points=False):
+    def __init__(self, meshName=None, method=0, selectedPoints=False):
 
         if not meshName:
             raise RuntimeError("No mesh set in class.")
@@ -33,7 +33,7 @@ class OBB(object):
         self.fnMesh = self.getMFnMesh(self.shapeName)
 
         # Get data we need to calculate OBB.
-        self.points = self.getPoints(self.fnMesh, selected=selected_points)
+        self.points = self.getPoints(self.fnMesh, selected=selectedPoints)
         self.triangles = self.getTriangles(self.fnMesh)
 
         if method == 0:
@@ -134,7 +134,7 @@ class OBB(object):
         Returns:
             (OBB Instance)
         """
-        return cls(meshName=meshName, method=0, selected_points=True)
+        return cls(meshName=meshName, method=0, selectedPoints=True)
 
     @classmethod
     def from_triangles(cls, meshName=None):
