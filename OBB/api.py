@@ -512,18 +512,18 @@ class OBB(object):
         mVecPoints = OpenMaya.MVectorArray()
         
         if selected:
-            compSel = OpenMaya.MSelectionList()
-            OpenMaya.MGlobal.getActiveSelectionList(compSel)
-            dagPath = OpenMaya.MDagPath()
-            components = OpenMaya.MObject()
-            compSel.getDagPath(0, dagPath, components)
-            if components.isNull():
+            mSel = OpenMaya.MSelectionList()
+            OpenMaya.MGlobal.getActiveSelectionList(mSel)
+            mDagPath = OpenMaya.MDagPath()
+            mComponents = OpenMaya.MObject()
+            mSel.getDagPath(0, mDagPath, mComponents)
+            if mComponents.isNull():
                 return mVecPoints
             
-            vert_itr = OpenMaya.MItMeshVertex(dagPath, components)
-            while not vert_itr.isDone():
-                mVecPoints.append(OpenMaya.MVector(vert_itr.position()))
-                vert_itr.next()
+            vertIter = OpenMaya.MItMeshVertex(mDagPath, mComponents)
+            while not vertIter.isDone():
+                mVecPoints.append(OpenMaya.MVector(vertIter.position(OpenMaya.MSpace.kWorld)))
+                vertIter.next()
 
         else:
             mPoints = OpenMaya.MPointArray()
