@@ -24,7 +24,7 @@ class OBB(object):
     """
     meshName = None
 
-    def __init__(self, meshName=None, method=0):
+    def __init__(self, meshName=None, method=0, selectedPoints=False):
 
         if not meshName:
             raise RuntimeError("No mesh set in class.")
@@ -33,7 +33,7 @@ class OBB(object):
         self.fnMesh = self.getMFnMesh(self.shapeName)
 
         # Get data we need to calculate OBB.
-        self.points = self.getPoints(self.fnMesh)
+        self.points = self.getPoints(self.fnMesh, selected=selectedPoints)
         self.triangles = self.getTriangles(self.fnMesh)
 
         if method == 0:
@@ -122,6 +122,19 @@ class OBB(object):
             (OBB Instance)
         """
         return cls(meshName=meshName, method=0)
+        
+    @classmethod
+    def from_selected_points(cls, meshName=None):
+        """
+        Bounding box algorithm using selected vertex points.
+
+        Raises:
+            None
+
+        Returns:
+            (OBB Instance)
+        """
+        return cls(meshName=meshName, method=0, selectedPoints=True)
 
     @classmethod
     def from_triangles(cls, meshName=None):
@@ -484,7 +497,7 @@ class OBB(object):
 
         return triangleVertices
 
-    def getPoints(self, fnMesh):
+    def getPoints(self, fnMesh, selected=False):
         """
         Get the points of each vertex.
 
@@ -496,13 +509,29 @@ class OBB(object):
         Returns:
             (OpenMaya.MVectorArray) list of points.
         """
-        mPoints = OpenMaya.MPointArray()
-        fnMesh.getPoints(mPoints, OpenMaya.MSpace.kWorld)
-
         mVecPoints = OpenMaya.MVectorArray()
-        [mVecPoints.append(OpenMaya.MVector(mPoints[x]))
-         for x in range(mPoints.length())]
+        
+        if selected:
+            mSel = OpenMaya.MSelectionList()
+            OpenMaya.MGlobal.getActiveSelectionList(mSel)
+            mDagPath = OpenMaya.MDagPath()
+            mComponents = OpenMaya.MObject()
+            mSel.getDagPath(0, mDagPath, mComponents)
+            if mComponents.isNull():
+                return mVecPoints
+            
+            vertIter = OpenMaya.MItMeshVertex(mDagPath, mComponents)
+            while not vertIter.isDone():
+                mVecPoints.append(OpenMaya.MVector(vertIter.position(OpenMaya.MSpace.kWorld)))
+                vertIter.next()
 
+        else:
+            mPoints = OpenMaya.MPointArray()
+            fnMesh.getPoints(mPoints, OpenMaya.MSpace.kWorld)
+
+            for x in range(mPoints.length()):
+                mVecPoints.append(OpenMaya.MVector(mPoints[x]))
+        
         return mVecPoints
 
     def getMFnMesh(self, mesh):
