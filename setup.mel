@@ -25,13 +25,13 @@ global proc setupOBB()
 
 	string $userScriptDir = `internalVar -userScriptDir`;
 
-	if (`file -q -ex ($userScriptDir + "/OBB")`)
+	if (`file -q -ex ($userScriptDir + "OBB")`)
 	{
 		string $response = `confirmDialog -t "Reinstall?" -m "Would you like to reinstall OBB?" -button "Yes" -button "No" -dismissString "No"`;
 		if ($response == "Yes")
 		{
 			python "import shutil";
-			python ("shutil.rmtree(\"" + $userScriptDir + "/OBB\")");
+			python ("shutil.rmtree(\"" + $userScriptDir + "OBB\")");
 		}
 		else
 		{
