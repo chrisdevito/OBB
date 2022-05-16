@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from OBB.utils import eigh
+
 try:
     from maya import cmds
     from maya import OpenMaya
@@ -9,10 +10,12 @@ except ImportError:
 
 try:
     from scipy.spatial import ConvexHull
+
     hullMethod = True
 except ImportError:
-    RuntimeWarning("Unable to load scipy."
-                   "The from_hull method will not be available.")
+    RuntimeWarning(
+        "Unable to load scipy." "The from_hull method will not be available."
+    )
     hullMethod = False
 
 
@@ -22,6 +25,7 @@ class OBB(object):
 
     Requires an input meshName.
     """
+
     meshName = None
 
     def __init__(self, meshName=None, method=0, selectedPoints=False):
@@ -46,8 +50,10 @@ class OBB(object):
             eigenVectors, center, obb_extents = self.build_from_hull()
 
         else:
-            raise RuntimeError("Method unsupported! Please use 0(from_points),"
-                               " 1(from_triangles), or 2(from_hull).")
+            raise RuntimeError(
+                "Method unsupported! Please use 0(from_points),"
+                " 1(from_triangles), or 2(from_hull)."
+            )
 
         # Naturally aligned axis for x, y, z.
         self.eigenVectors = eigenVectors
@@ -122,7 +128,7 @@ class OBB(object):
             (OBB Instance)
         """
         return cls(meshName=meshName, method=0)
-        
+
     @classmethod
     def from_selected_points(cls, meshName=None):
         """
@@ -164,7 +170,8 @@ class OBB(object):
             raise RuntimeError(
                 "From hull method unavailable because "
                 "scipy cannot be imported."
-                "Please install it if you need it.")
+                "Please install it if you need it."
+            )
         return cls(meshName=meshName, method=2)
 
     def create_bounding_box(self, meshName="bounding_GEO"):
@@ -182,8 +189,7 @@ class OBB(object):
         obbCube = cmds.polyCube(constructionHistory=False, name="obb_GEO")[0]
 
         for ind, pnt in enumerate(self.boundPoints):
-            cmds.xform("%s.vtx[%s]" % (obbCube, ind),
-                       translation=[pnt.x, pnt.y, pnt.z])
+            cmds.xform("%s.vtx[%s]" % (obbCube, ind), translation=[pnt.x, pnt.y, pnt.z])
 
         return obbCube
 
@@ -197,22 +203,24 @@ class OBB(object):
         Returns:
             (list of floats) Matrix
         """
-        m = [(self.eigenVectors[1].x * self._obb_extents.y * 2),
-             (self.eigenVectors[1].y * self._obb_extents.y * 2),
-             (self.eigenVectors[1].z * self._obb_extents.y * 2),
-             0.0,
-             (self.eigenVectors[2].x * self._obb_extents.z * 2),
-             (self.eigenVectors[2].y * self._obb_extents.z * 2),
-             (self.eigenVectors[2].z * self._obb_extents.z * 2),
-             0.0,
-             (self.eigenVectors[0].x * self._obb_extents.x * 2),
-             (self.eigenVectors[0].y * self._obb_extents.x * 2),
-             (self.eigenVectors[0].z * self._obb_extents.x * 2),
-             0.0,
-             self._center.x,
-             self._center.y,
-             self._center.z,
-             1.0]
+        m = [
+            (self.eigenVectors[1].x * self._obb_extents.y * 2),
+            (self.eigenVectors[1].y * self._obb_extents.y * 2),
+            (self.eigenVectors[1].z * self._obb_extents.y * 2),
+            0.0,
+            (self.eigenVectors[2].x * self._obb_extents.z * 2),
+            (self.eigenVectors[2].y * self._obb_extents.z * 2),
+            (self.eigenVectors[2].z * self._obb_extents.z * 2),
+            0.0,
+            (self.eigenVectors[0].x * self._obb_extents.x * 2),
+            (self.eigenVectors[0].y * self._obb_extents.x * 2),
+            (self.eigenVectors[0].z * self._obb_extents.x * 2),
+            0.0,
+            self._center.x,
+            self._center.y,
+            self._center.z,
+            1.0,
+        ]
 
         # Get the scale.
         mMat = OpenMaya.MMatrix()
@@ -235,38 +243,56 @@ class OBB(object):
         Returns:
             (list of MVectors) Bounding box points.
         """
-        boundPoints = [(self._center - self.eigenVectors[0] *
-                        self._obb_extents.x + self.eigenVectors[1] *
-                        self._obb_extents.y + self.eigenVectors[2] *
-                        self._obb_extents.z),
-                       (self._center - self.eigenVectors[0] *
-                        self._obb_extents.x + self.eigenVectors[1] *
-                        self._obb_extents.y - self.eigenVectors[2] *
-                        self._obb_extents.z),
-                       (self._center + self.eigenVectors[0] *
-                        self._obb_extents.x + self.eigenVectors[1] *
-                        self._obb_extents.y + self.eigenVectors[2] *
-                        self._obb_extents.z),
-                       (self._center + self.eigenVectors[0] *
-                        self._obb_extents.x + self.eigenVectors[1] *
-                        self._obb_extents.y - self.eigenVectors[2] *
-                        self._obb_extents.z),
-                       (self._center + self.eigenVectors[0] *
-                        self._obb_extents.x - self.eigenVectors[1] *
-                        self._obb_extents.y + self.eigenVectors[2] *
-                        self._obb_extents.z),
-                       (self._center + self.eigenVectors[0] *
-                        self._obb_extents.x - self.eigenVectors[1] *
-                        self._obb_extents.y - self.eigenVectors[2] *
-                        self._obb_extents.z),
-                       (self._center - self.eigenVectors[0] *
-                        self._obb_extents.x - self.eigenVectors[1] *
-                        self._obb_extents.y + self.eigenVectors[2] *
-                        self._obb_extents.z),
-                       (self._center - self.eigenVectors[0] *
-                        self._obb_extents.x - self.eigenVectors[1] *
-                        self._obb_extents.y - self.eigenVectors[2] *
-                        self._obb_extents.z)]
+        boundPoints = [
+            (
+                self._center
+                - self.eigenVectors[0] * self._obb_extents.x
+                + self.eigenVectors[1] * self._obb_extents.y
+                + self.eigenVectors[2] * self._obb_extents.z
+            ),
+            (
+                self._center
+                - self.eigenVectors[0] * self._obb_extents.x
+                + self.eigenVectors[1] * self._obb_extents.y
+                - self.eigenVectors[2] * self._obb_extents.z
+            ),
+            (
+                self._center
+                + self.eigenVectors[0] * self._obb_extents.x
+                + self.eigenVectors[1] * self._obb_extents.y
+                + self.eigenVectors[2] * self._obb_extents.z
+            ),
+            (
+                self._center
+                + self.eigenVectors[0] * self._obb_extents.x
+                + self.eigenVectors[1] * self._obb_extents.y
+                - self.eigenVectors[2] * self._obb_extents.z
+            ),
+            (
+                self._center
+                + self.eigenVectors[0] * self._obb_extents.x
+                - self.eigenVectors[1] * self._obb_extents.y
+                + self.eigenVectors[2] * self._obb_extents.z
+            ),
+            (
+                self._center
+                + self.eigenVectors[0] * self._obb_extents.x
+                - self.eigenVectors[1] * self._obb_extents.y
+                - self.eigenVectors[2] * self._obb_extents.z
+            ),
+            (
+                self._center
+                - self.eigenVectors[0] * self._obb_extents.x
+                - self.eigenVectors[1] * self._obb_extents.y
+                + self.eigenVectors[2] * self._obb_extents.z
+            ),
+            (
+                self._center
+                - self.eigenVectors[0] * self._obb_extents.x
+                - self.eigenVectors[1] * self._obb_extents.y
+                - self.eigenVectors[2] * self._obb_extents.z
+            ),
+        ]
 
         return boundPoints
 
@@ -282,8 +308,10 @@ class OBB(object):
             CenterPoint(OpenMaya.MVector)
             BoundingExtents(OpenMaya.MVector)
         """
-        npPointList = [[self.points[i].x, self.points[i].y, self.points[i].z]
-                       for i in range(self.points.length())]
+        npPointList = [
+            [self.points[i].x, self.points[i].y, self.points[i].z]
+            for i in range(self.points.length())
+        ]
 
         try:
             hull = ConvexHull(npPointList)
@@ -291,7 +319,8 @@ class OBB(object):
             raise RuntimeError(
                 "From hull method unavailable because"
                 " scipy cannot be imported."
-                "Please install it if you need it.")
+                "Please install it if you need it."
+            )
 
         indices = hull.simplices
         vertices = npPointList[indices]
@@ -302,9 +331,9 @@ class OBB(object):
         for ind in range(0, len(hullPoints), 3):
             hullArray.append(
                 OpenMaya.MVector(
-                    hullPoints[ind],
-                    hullPoints[ind + 1],
-                    hullPoints[ind + 2]))
+                    hullPoints[ind], hullPoints[ind + 1], hullPoints[ind + 2]
+                )
+            )
 
         triPoints = OpenMaya.MIntArray()
         for tri in range(len(hullTriPoints)):
@@ -352,16 +381,21 @@ class OBB(object):
             Am += Ai
 
             # these bits set the c terms to Am*E[xx], Am*E[xy], Am*E[xz]....
-            cxx += ((9.0 * mui.x * mui.x + p.x * p.x + q.x * q.x + r.x * r.x) *
-                    (Ai / 12.0))
-            cxy += ((9.0 * mui.x * mui.y + p.x * p.y + q.x * q.y + r.x * r.y) *
-                    (Ai / 12.0))
-            cxz += ((9.0 * mui.x * mui.z + p.x * p.z + q.x * q.z + r.x * r.z) *
-                    (Ai / 12.0))
-            cyy += ((9.0 * mui.y * mui.y + p.y * p.y + q.y * q.y + r.y * r.y) *
-                    (Ai / 12.0))
-            cyz += ((9.0 * mui.y * mui.z + p.y * p.z + q.y * q.z + r.y * r.z) *
-                    (Ai / 12.0))
+            cxx += (9.0 * mui.x * mui.x + p.x * p.x + q.x * q.x + r.x * r.x) * (
+                Ai / 12.0
+            )
+            cxy += (9.0 * mui.x * mui.y + p.x * p.y + q.x * q.y + r.x * r.y) * (
+                Ai / 12.0
+            )
+            cxz += (9.0 * mui.x * mui.z + p.x * p.z + q.x * q.z + r.x * r.z) * (
+                Ai / 12.0
+            )
+            cyy += (9.0 * mui.y * mui.y + p.y * p.y + q.y * q.y + r.y * r.y) * (
+                Ai / 12.0
+            )
+            cyz += (9.0 * mui.y * mui.z + p.y * p.z + q.y * q.z + r.y * r.z) * (
+                Ai / 12.0
+            )
 
         mu /= Am
 
@@ -380,12 +414,9 @@ class OBB(object):
         czz -= mu.z * mu.z
 
         # Covariance Matrix
-        C = [[cxx, cxy, cxz],
-             [cxy, cyy, cyz],
-             [cxz, cyz, czz]]
+        C = [[cxx, cxy, cxz], [cxy, cyy, cyz], [cxz, cyz, czz]]
 
-        return self.build_from_covariance_matrix(
-            cvMatrix=C)
+        return self.build_from_covariance_matrix(cvMatrix=C)
 
     def build_from_points(self):
         """
@@ -417,12 +448,9 @@ class OBB(object):
             czz += p.z * p.z - mu.z * mu.z
 
         # Covariance Matrix
-        C = [[cxx, cxy, cxz],
-             [cxy, cyy, cyz],
-             [cxz, cyz, czz]]
+        C = [[cxx, cxy, cxz], [cxy, cyy, cyz], [cxz, cyz, czz]]
 
-        return self.build_from_covariance_matrix(
-            cvMatrix=C)
+        return self.build_from_covariance_matrix(cvMatrix=C)
 
     def build_from_covariance_matrix(self, cvMatrix=None):
         """
@@ -454,27 +482,27 @@ class OBB(object):
         for i in range(self.points.length()):
             pnt = self.points[i]
 
-            p_prime = OpenMaya.MVector(
-                r * pnt, u * pnt, f * pnt)
+            p_prime = OpenMaya.MVector(r * pnt, u * pnt, f * pnt)
 
             minim = OpenMaya.MVector(
                 min(minim.x, p_prime.x),
                 min(minim.y, p_prime.y),
-                min(minim.z, p_prime.z))
+                min(minim.z, p_prime.z),
+            )
             maxim = OpenMaya.MVector(
                 max(maxim.x, p_prime.x),
                 max(maxim.y, p_prime.y),
-                max(maxim.z, p_prime.z))
+                max(maxim.z, p_prime.z),
+            )
 
-        centerPoint = (maxim + minim) * .5
-        m_ext = (maxim - minim) * .5
+        centerPoint = (maxim + minim) * 0.5
+        m_ext = (maxim - minim) * 0.5
 
         R = OpenMaya.MVector(r.x, u.x, f.x)
         U = OpenMaya.MVector(r.y, u.y, f.y)
         F = OpenMaya.MVector(r.z, u.z, f.z)
 
-        m_pos = OpenMaya.MVector(
-            R * centerPoint, U * centerPoint, F * centerPoint)
+        m_pos = OpenMaya.MVector(R * centerPoint, U * centerPoint, F * centerPoint)
 
         return [r, u, f], m_pos, m_ext
 
@@ -502,6 +530,7 @@ class OBB(object):
         Get the points of each vertex.
 
         :param fnMesh (OpenMaya.MFnMesh): mesh function set.
+        :param selected (bool): selected verts or not
 
         Raises:
             None
@@ -510,7 +539,7 @@ class OBB(object):
             (OpenMaya.MVectorArray) list of points.
         """
         mVecPoints = OpenMaya.MVectorArray()
-        
+
         if selected:
             mSel = OpenMaya.MSelectionList()
             OpenMaya.MGlobal.getActiveSelectionList(mSel)
@@ -519,19 +548,21 @@ class OBB(object):
             mSel.getDagPath(0, mDagPath, mComponents)
             if mComponents.isNull():
                 return mVecPoints
-            
+
             vertIter = OpenMaya.MItMeshVertex(mDagPath, mComponents)
             while not vertIter.isDone():
-                mVecPoints.append(OpenMaya.MVector(vertIter.position(OpenMaya.MSpace.kWorld)))
+                mVecPoints.append(
+                    OpenMaya.MVector(vertIter.position(OpenMaya.MSpace.kWorld))
+                )
                 vertIter.next()
 
         else:
             mPoints = OpenMaya.MPointArray()
             fnMesh.getPoints(mPoints, OpenMaya.MSpace.kWorld)
 
-            for x in range(mPoints.length()):
-                mVecPoints.append(OpenMaya.MVector(mPoints[x]))
-        
+            for idx in range(mPoints.length()):
+                mVecPoints.append(OpenMaya.MVector(mPoints[idx]))
+
         return mVecPoints
 
     def getMFnMesh(self, mesh):
@@ -569,11 +600,11 @@ class OBB(object):
         Returns:
             (str) shape node name
         """
-        if cmds.nodeType(node) == 'transform':
+        if cmds.nodeType(node) == "transform":
             shapes = cmds.listRelatives(node, shapes=True)
 
             if not shapes:
-                raise RuntimeError('%s has no shape' % node)
+                raise RuntimeError("%s has no shape" % node)
 
             return shapes[0]
 
@@ -581,7 +612,7 @@ class OBB(object):
             return node
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     mesh = cmds.ls(selection=True)
 
@@ -589,19 +620,16 @@ if __name__ == '__main__':
         raise RuntimeError("Nothing selected!")
 
     obbBoundBoxPnts = OBB.from_points(mesh)
-    obbCube = cmds.polyCube(
-        constructionHistory=False, name="pointMethod_GEO")[0]
+    obbCube = cmds.polyCube(constructionHistory=False, name="pointMethod_GEO")[0]
     cmds.xform(obbCube, matrix=obbBoundBoxPnts.matrix)
     print(obbBoundBoxPnts.volume)
 
     obbBoundBoxTris = OBB.from_triangles(mesh)
-    obbCube = cmds.polyCube(
-        constructionHistory=False, name="triangleMethod_GEO")[0]
+    obbCube = cmds.polyCube(constructionHistory=False, name="triangleMethod_GEO")[0]
     cmds.xform(obbCube, matrix=obbBoundBoxTris.matrix)
     print(obbBoundBoxTris.volume)
 
     obbBoundBoxHull = OBB.from_hull(mesh)
-    obbCube = cmds.polyCube(
-        constructionHistory=False, name="hullMethod_GEO")[0]
+    obbCube = cmds.polyCube(constructionHistory=False, name="hullMethod_GEO")[0]
     cmds.xform(obbCube, matrix=obbBoundBoxHull.matrix)
     print(obbBoundBoxHull.volume)
